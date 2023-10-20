@@ -107,7 +107,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 
-<body class="bg">\
+<body class="bg" document.getElementById('sensei-resources-container').classList.add('hidden');>
     <meta name="referrer" content="no-referrer">
 
     <script src="https://use.typekit.net/wxu0avz.js"></script>
@@ -229,7 +229,7 @@
                 <p></p>
             </div>
         </div>
-        <div onclick="document.getElementById('sensei-resources-container').classList.toggle('hidden')"
+        <div onclick="document.getElementById('sensei-resources-container').classList.toggle('hidden'); event.stopPropagation()"
             id="sensei-resources-button">Sensei Resources</div>
 
         <div id="sensei-resources-container" class="hidden"><a href="https://forms.codeninjas.com/gamebuilding">Tour link</a>
