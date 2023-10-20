@@ -5,26 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Ninjas Welcome Screen</title>
-    <style>
-        div#sensei-resources-button {
-            position: absolute;
-            right: 3%;
-            bottom: 3%;
-            color: #224167;
-            padding: 2px;
-            cursor: pointer;
-        }
-
-        div#sensei-resources-container {
-            position: absolute;
-            right: 3%;
-            bottom: 6%;
-            background: beige;
-            padding: 5px;
-            width: fit-content;
-            min-width: 8em;
-        }
-    </style>
     <style type="text/css">
         .tk-azo-sans-web {
             font-family: "azo-sans-web", sans-serif;
@@ -104,18 +84,6 @@
             font-display: auto;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-</head>
-
-<body class="bg" document.getElementById('sensei-resources-container').classList.add('hidden');>
-    <meta name="referrer" content="no-referrer">
-
-    <script src="https://use.typekit.net/wxu0avz.js"></script>
-    <script>try { Typekit.load({ async: true }); } catch (e) { }</script>
-
-    <link href="style-libs.css" rel="stylesheet">
-
-    <link href="site-style.css" rel="stylesheet">
     <style>
         #impact-box img {
             width: 400px;
@@ -129,9 +97,8 @@
         }
 
         #impact-box {
-            text-align: center;
-            margin: 15px;
-            margin-top: 30px;
+            width: fit-content;
+            margin: 30px auto 15px auto;
         }
 
         #choose-where-to-sign-in {
@@ -172,12 +139,39 @@
         #gdp-back-button:hover {
             text-decoration: underline;
         }
+
+        div#sensei-resources-button {
+            position: absolute;
+            right: 3%;
+            bottom: 3%;
+            color: #224167;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        div#sensei-resources-container {
+            position: absolute;
+            right: 3%;
+            bottom: 6%;
+            background: beige;
+            padding: 5px;
+            width: fit-content;
+            min-width: 8em;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
 
+<body class="bg" document.getElementById('sensei-resources-container').classList.add('hidden');>
+    <meta name="referrer" content="no-referrer">
 
+    <script src="https://use.typekit.net/wxu0avz.js"></script>
+    <script>try { Typekit.load({ async: true }); } catch (e) { }</script>
 
+    <link href="style-libs.css" rel="stylesheet">
 
-
+    <link href="site-style.css" rel="stylesheet">
+    
     <div class="container welcome-page">
 
         <div>
