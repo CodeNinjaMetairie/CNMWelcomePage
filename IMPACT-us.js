@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.1
+// @version      0.2
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -11,7 +11,7 @@
 // @grant        none
 // ==/UserScript==
 
-const version = '0.1';
+const version = '0.2';
 
 (function() {
     'use strict';
@@ -20,6 +20,6 @@ const version = '0.1';
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
         console.log(`Init CNM help script V${version}`);
         if (homeButton?.innerText.includes('LOG IN AT HOME')) {
-            homeButton.remove();
+            homeButton.remove(); // Remove the button for now due to issues
         }});
 })();
