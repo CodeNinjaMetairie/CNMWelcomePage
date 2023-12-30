@@ -27,7 +27,7 @@ const version = '0.3';
         const senseiBtn = document.querySelector('.sensei-btn');
         if (senseiBtn) {
             console.log("Found sensei-btn");
-            documentObserver.disconnect();
+            //documentObserver.disconnect();
             let btnObserver = new MutationObserver((mutations) => {
                 const name = document.querySelector('.bottom-username').innerText.trim();
                 if (senseiBtn.classList.contains('sensei-help')) {
