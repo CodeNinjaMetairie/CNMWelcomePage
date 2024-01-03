@@ -25,7 +25,8 @@ const version = '0.4';
 
     let documentObserver = new MutationObserver((mutations) => {
         const senseiBtn = document.querySelector('.sensei-btn');
-        if (senseiBtn) {
+        senseiBtn.hasBeepHandler = true;
+        if (senseiBtn && senseiBtn.hasBeepHandler) {
             console.log("Found sensei-btn");
             //documentObserver.disconnect();
             let btnObserver = new MutationObserver((mutations) => {
