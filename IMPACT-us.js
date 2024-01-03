@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.4
+// @version      0.4.1
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -11,7 +11,7 @@
 // @grant        none
 // ==/UserScript==
 
-const version = '0.4';
+const version = '0.4.1';
 
 (function() {
     'use strict';
