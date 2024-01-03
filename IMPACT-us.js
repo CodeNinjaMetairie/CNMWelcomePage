@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.4.1
+// @version      0.4.2
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -11,7 +11,7 @@
 // @grant        none
 // ==/UserScript==
 
-const version = '0.4.1';
+const version = '0.4.2';
 
 (function() {
     'use strict';
@@ -25,9 +25,9 @@ const version = '0.4.1';
 
     let documentObserver = new MutationObserver((mutations) => {
         const senseiBtn = document.querySelector('.sensei-btn');
-        senseiBtn.hasBeepHandler = true;
-        if (senseiBtn && senseiBtn.hasBeepHandler) {
+        if (senseiBtn && !senseiBtn.hasBeepHandler) {
             console.log("Found sensei-btn");
+            senseiBtn.hasBeepHandler = true;
             //documentObserver.disconnect();
             let btnObserver = new MutationObserver((mutations) => {
                 const name = document.querySelector('.bottom-username').innerText.trim();
