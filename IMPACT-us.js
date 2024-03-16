@@ -35,12 +35,12 @@ const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:1
 (function() {
     'use strict';
 
-    addEventListener("load", (event) => {
+    /*addEventListener("load", (event) => {
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
         console.log(`Init CNM help script V${version}`);
         if (homeButton?.innerText.includes('LOG IN AT HOME')) {
             homeButton.remove(); // Remove the button for now due to issues
-        }});
+        }});*/
 
     let documentObserver = new MutationObserver((mutations) => {
         const senseiBtn = document.querySelector('.sensei-btn');
