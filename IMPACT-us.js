@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.5
+// @version      0.5.1
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -11,7 +11,7 @@
 // @grant        none
 // ==/UserScript==
 
-const version = '0.5';
+const version = '0.5.1';
 
 const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%)" id="cnm-submit-confirm">
     <div
