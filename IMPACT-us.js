@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.5.1
+// @version      0.5.2
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -11,7 +11,7 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
-const version = '0.5.1';
+const version = '0.5.2';
 
 const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%);z-index:1000;" id="cnm-submit-confirm">
     <div
@@ -34,13 +34,22 @@ const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:1
 
 const main = function() {
     'use strict';
+    log(`Init CNM help script V${version} on ${window.location.href}`);
 
-    addEventListener("load", (event) => {
+    if (window.location.pathname === '/login') {
+        const versionDiv = document.createElement('div');
+        versionDiv.id = 'cnm-version-holder';
+        versionDiv.innerHTML = `${version}`;
+        versionDiv.style = 'position: fixed;bottom: 0px;right: 0px;font-size: 16px;color: #4d4d9a;';
+        document.body.appendChild(versionDiv);
+    }
+
+    /*addEventListener("load", (event) => {
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
-        log(`Init CNM help script V${version}`);
+        
         if (homeButton?.innerText.includes('LOG IN AT HOME')) {
             homeButton.remove(); // Remove the button for now due to issues
-        }});
+        }});*/
 
     let documentObserver = new MutationObserver((mutations) => {
         const senseiBtn = document.querySelector('.sensei-btn');
