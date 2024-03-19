@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.5.2
+// @version      0.5.3
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -9,9 +9,10 @@
 // @updateURL    https://raw.githubusercontent.com/CodeNinjaMetairie/CNMWelcomePage/main/IMPACT-us.js
 // @downloadURL  https://raw.githubusercontent.com/CodeNinjaMetairie/CNMWelcomePage/main/IMPACT-us.js
 // @grant        unsafeWindow
+// @grant        window.onurlchange
 // ==/UserScript==
 
-const version = '0.5.2';
+const version = '0.5.3';
 
 const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%);z-index:1000;" id="cnm-submit-confirm">
     <div
@@ -36,13 +37,10 @@ const main = function() {
     'use strict';
     log(`Init CNM help script V${version} on ${window.location.href}`);
 
-    if (window.location.pathname === '/login') {
-        const versionDiv = document.createElement('div');
-        versionDiv.id = 'cnm-version-holder';
-        versionDiv.innerHTML = `${version}`;
-        versionDiv.style = 'position: fixed;bottom: 0px;right: 0px;font-size: 16px;color: #4d4d9a;';
-        document.body.appendChild(versionDiv);
-    }
+    perPage();
+    window.navigation.addEventListener("navigate", perPage());
+
+    window.addEventListener('urlchange', perPage);
 
     /*addEventListener("load", (event) => {
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
@@ -152,9 +150,28 @@ function shouldRequireSenseiApproval() {
     if (!titleContainer?.querySelector('h1')?.innerText.startsWith('Quest:')) { // startsWith in case of a title like 'Adventure: Ninja Quest'
         return false;
     }
+    if (window.location.pathname !== '/level/project/activity') {
+        return false;
+    }
     const requirementsStar = document.querySelector(`[style="--icon-background: url('/assets/requirement.svg');"]`);
     if (requirementsStar && requirementsStar.getAttribute("disabled") === "false") {
         return true;
+    }
+}
+
+// Function will be called at least once per URL change but could be called more often.
+// Therefore it should behave absolutely.
+function perPage() {
+    if (window.location.pathname === '/login') {
+        if (!document.getElementById('cnm-version-holder')) {
+            const versionDiv = document.createElement('div');
+            versionDiv.id = 'cnm-version-holder';
+            versionDiv.innerHTML = `${version}`;
+            versionDiv.style = 'position: fixed;bottom: 0px;right: 0px;font-size: 16px;color: #4d4d9a;';
+            document.body.appendChild(versionDiv);
+        }
+    } else {
+        document.getElementById('cnm-version-holder')?.remove();
     }
 }
 
