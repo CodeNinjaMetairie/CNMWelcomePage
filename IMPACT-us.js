@@ -8,12 +8,12 @@
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @updateURL    https://raw.githubusercontent.com/CodeNinjaMetairie/CNMWelcomePage/main/IMPACT-us.js
 // @downloadURL  https://raw.githubusercontent.com/CodeNinjaMetairie/CNMWelcomePage/main/IMPACT-us.js
-// @grant        none
+// @grant        unsafeWindow
 // ==/UserScript==
 
 const version = '0.5.1';
 
-const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%)" id="cnm-submit-confirm">
+const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%);z-index:1000;" id="cnm-submit-confirm">
     <div
         style="background:#00f;width:60%;margin:auto;height:80%;border-radius:30px;margin:0;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
         <div style="text-align:center;font-size:2em;font-weight:700;line-height:1.2em;margin:0;padding:75px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%">
@@ -32,20 +32,20 @@ const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:1
     </div>
 </div>`;
 
-(function() {
+const main = function() {
     'use strict';
 
-    /*addEventListener("load", (event) => {
+    addEventListener("load", (event) => {
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
-        console.log(`Init CNM help script V${version}`);
+        log(`Init CNM help script V${version}`);
         if (homeButton?.innerText.includes('LOG IN AT HOME')) {
             homeButton.remove(); // Remove the button for now due to issues
-        }});*/
+        }});
 
     let documentObserver = new MutationObserver((mutations) => {
         const senseiBtn = document.querySelector('.sensei-btn');
         if (senseiBtn && !senseiBtn.hasBeepHandler) {
-            console.log("CNM: Found sensei-btn");
+            log("CNM: Found sensei-btn");
             senseiBtn.hasBeepHandler = true;
             //documentObserver.disconnect();
             let btnObserver = new MutationObserver((mutations) => {
@@ -61,22 +61,29 @@ const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:1
         makeSubmitOverlay();
     });
     documentObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
-})();
+}
+
+try {
+    main();
+} catch (e) {
+    log(e.toString())
+}
 
 function makeSubmitOverlay() {
+    let updateOnly = false;
     const submitBtn = Array.from(document.querySelectorAll(`button.nav-btn-green`)).filter(e => e.innerHTML.includes('SUBMIT'))[0];
     if (document.getElementById('cnm-submit-overlay')) {
         if (!submitBtn) {
             document.getElementById('cnm-submit-overlay').remove();
         } else {
-            return;
+            updateOnly = true;
         }
     }
     if (!submitBtn) {
         return;
     }
-    console.log("CNM: Found submit button");
-    const submitOverlay = document.createElement('div');
+    
+    const submitOverlay = updateOnly ? document.getElementById('cnm-submit-overlay') : document.createElement('div');
     const bodyRect = document.body.getBoundingClientRect();
     const submitRect = submitBtn.getBoundingClientRect();
     submitOverlay.id = 'cnm-submit-overlay';
@@ -85,11 +92,21 @@ function makeSubmitOverlay() {
     submitOverlay.style.left = submitRect.left - bodyRect.left + 'px';
     submitOverlay.style.width = submitRect.right - submitRect.left + 'px';
     submitOverlay.style.height = submitRect.bottom - submitRect.top + 'px';
+
+    if (updateOnly) {
+        return;
+    }
+
     submitOverlay.style.cursor = 'pointer';
     //submitOverlay.style.background = 'blue';
     submitOverlay.onclick = (e) => {
         if (shouldRequireSenseiApproval()) {
-            console.log("CNM: Stopping submission");
+            // Exit if already submitting
+            log('Submit button disabled: ' + submitBtn.disabled)
+            if (submitBtn.disabled) {
+                return;
+            }
+            log("CNM: Stopping submission");
             document.body.insertAdjacentHTML('beforeend', overlayHTML);
             const confirmButton = document.getElementById('cnm-submit-confirm-button');
             const passwordInput = document.getElementById('cnm-submit-password');
@@ -115,7 +132,7 @@ function makeSubmitOverlay() {
             submitBtn.click();
         }
     }
-    new ResizeObserver(makeSubmitOverlay).observe(submitOverlay);
+    new ResizeObserver(makeSubmitOverlay).observe(submitBtn);
     document.body.appendChild(submitOverlay);
 }
 
@@ -129,5 +146,13 @@ function shouldRequireSenseiApproval() {
     const requirementsStar = document.querySelector(`[style="--icon-background: url('/assets/requirement.svg');"]`);
     if (requirementsStar && requirementsStar.getAttribute("disabled") === "false") {
         return true;
+    }
+}
+
+function log(msg) {
+    if (unsafeWindow.___cnm__log_messages_ignore) {
+        unsafeWindow.___cnm__log_messages_ignore.push(msg);
+    } else {
+        unsafeWindow.___cnm__log_messages_ignore = [msg]
     }
 }
