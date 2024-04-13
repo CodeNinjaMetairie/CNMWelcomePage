@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impact Tools
 // @namespace    https://codeninjametairie.github.io/
-// @version      0.5.3
+// @version      0.6.0
 // @description  Various Tweaks to the IMPACT Site
 // @author       CNM
 // @match        *://impact.codeninjas.com/*
@@ -12,7 +12,7 @@
 // @grant        window.onurlchange
 // ==/UserScript==
 
-const version = '0.5.3';
+const version = '0.6.0';
 
 const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(37 37 67 / 50%);z-index:1000;" id="cnm-submit-confirm">
     <div
@@ -33,18 +33,27 @@ const overlayHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:1
     </div>
 </div>`;
 
+let lastHref = window.location.href;
+
 const main = function() {
     'use strict';
     log(`Init CNM help script V${version} on ${window.location.href}`);
 
     perPage();
-    window.navigation.addEventListener("navigate", perPage());
+    function callPerPageIfChanged() {
+        if (window.location.href !== lastHref) {
+            log('Navigated to: ' + window.location.href);
+            lastHref = window.location.href;
+            perPage();
+        }
+    }
+    window.navigation.addEventListener("navigate", callPerPageIfChanged);
 
-    window.addEventListener('urlchange', perPage);
+    window.addEventListener('urlchange', callPerPageIfChanged);
 
     /*addEventListener("load", (event) => {
         const homeButton = document.querySelector('body > app-root > ng-component > main > div > app-login-form > div > div > form > div.login-at-home > div');
-        
+
         if (homeButton?.innerText.includes('LOG IN AT HOME')) {
             homeButton.remove(); // Remove the button for now due to issues
         }});*/
@@ -89,7 +98,7 @@ function makeSubmitOverlay() {
     if (!submitBtn) {
         return;
     }
-    
+
     const submitOverlay = updateOnly ? document.getElementById('cnm-submit-overlay') : document.createElement('div');
     const bodyRect = document.body.getBoundingClientRect();
     const submitRect = submitBtn.getBoundingClientRect();
@@ -161,7 +170,8 @@ function shouldRequireSenseiApproval() {
 
 // Function will be called at least once per URL change but could be called more often.
 // Therefore it should behave absolutely.
-function perPage() {
+// If we reload, we'll usually do this twice, as the url will change from start to something else and back again.
+async function perPage() {
     if (window.location.pathname === '/login') {
         if (!document.getElementById('cnm-version-holder')) {
             const versionDiv = document.createElement('div');
@@ -172,6 +182,32 @@ function perPage() {
         }
     } else {
         document.getElementById('cnm-version-holder')?.remove();
+    }
+
+    const splitPath = window.location.pathname.split('/');
+    if (splitPath[1] === 'level' && splitPath[splitPath.length - 1] === 'activity') {
+        /* Horribly hacky: as we can't reliably determine this using onload or anything else, wait until
+        name exists. Could use a MutationObserver. */
+        while (!document.querySelector('.bottom-username')) {
+            await (new Promise(res => setTimeout(res, 100)));
+        }
+        const name = document.querySelector('.bottom-username').innerText.trim();
+        const titleContainer = document.querySelector('.title-container');
+        const beltName = titleContainer.children[0].innerText.slice(0, titleContainer.children[0].innerText.indexOf(' / '));
+        const levelName = titleContainer.children[0].innerText.slice(titleContainer.children[0].innerText.indexOf(' / ') + ' / '.length);
+        const activityName = titleContainer.children[1].innerText.trim();
+
+        fetch(`https://crmzoom.com:3001/activitylog?name=${name}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                beltName: beltName,
+                levelName: levelName,
+                activityName: activityName
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        });
     }
 }
 
